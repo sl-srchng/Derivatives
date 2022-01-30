@@ -1,0 +1,96 @@
+---
+title: "Assignment 1 - Binomial Model"
+author: "Valery Pugacheva"
+date: "January 30, 2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE)
+install.packages("derivmkts")
+library(derivmkts)
+```
+
+
+This is the solution to exercises 4 of Assignment 1. Let's first define the parameters:
+```{r}
+S0 <- 40
+K <- 40
+r <- .04
+sigma <- .3
+time_T <- 1/2
+div <- 0
+```
+
+This is the answer for *4 (a)*
+```{r}
+x <- binomopt(S0, K, sigma, r, time_T, div, nstep = 2, american=FALSE,
+putopt=FALSE, specifyupdn=FALSE, crr=TRUE, jarrowrudd=FALSE,
+returntrees=FALSE, returnparams=FALSE,
+returngreeks=FALSE)
+
+round(x, 5)
+```
+
+This is the answer for *4 (b)*
+```{r}
+x <- binomopt(S0, K, sigma, r, time_T, div, nstep = 10, american=FALSE,
+putopt=FALSE, specifyupdn=FALSE, crr=TRUE, jarrowrudd=FALSE,
+returntrees=FALSE, returnparams=FALSE,
+returngreeks=FALSE)
+
+round(x, 5)
+```
+
+This is the answer for *4 (c)*
+```{r}
+x <- binomopt(S0, K, sigma, r, time_T, div, nstep = 100, american=FALSE,
+putopt=FALSE, specifyupdn=FALSE, crr=TRUE, jarrowrudd=FALSE,
+returntrees=FALSE, returnparams=FALSE,
+returngreeks=FALSE)
+
+round(x, 5)
+```
+
+This is the answer for *4 (d)*
+```{r}
+x <- binomopt(S0, K, sigma, r, time_T, div, nstep = 10, american=TRUE,
+putopt=FALSE, specifyupdn=FALSE, crr=TRUE, jarrowrudd=FALSE,
+returntrees=FALSE, returnparams=FALSE,
+returngreeks=FALSE)
+
+round(x, 5)
+```
+
+This is the answer for *4 (e)*
+```{r}
+x <- binomopt(S0, K, sigma, r, time_T, div, nstep = 50, american=TRUE,
+putopt=TRUE, specifyupdn=FALSE, crr=TRUE, jarrowrudd=FALSE,
+returntrees=FALSE, returnparams=FALSE,
+returngreeks=FALSE)
+
+round(x, 5)
+```
+
+This is the answer for *4 (f)*
+```{r}
+x <- binomopt(S0, K, sigma, r, time_T, div, nstep = 10000, american=TRUE,
+putopt=TRUE, specifyupdn=FALSE, crr=TRUE, jarrowrudd=FALSE,
+returntrees=FALSE, returnparams=FALSE,
+returngreeks=FALSE)
+
+round(x, 8)
+```
+
+# Exercise 1: European Options
+
+Let's first compute the limiting price of an European call/put (this is the celebrated Black-Scholes formula which you'll derive later in the course):
+```{r}
+d_1 <- (log(S0/K)+(r+sigma^2/2)*time_T) / (sigma*sqrt(time_T))
+d_2 <- d_1 - sigma * sqrt(time_T)
+bs_call_price <- S0*pnorm(d_1) - K*exp(-r*time_T)*pnorm(d_2)
+bs_put_price <- K*exp(-r*time_T)*pnorm(-d_2) - S0*pnorm(-d_1)
+bs_call_price
+bs_put_price
+```
+
